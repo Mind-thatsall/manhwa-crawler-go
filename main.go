@@ -1,19 +1,16 @@
 package main
 
 import (
-	"net/http"
-
+	"github.com/Mind-thatsall/web-crawler-go/controller"
+	"github.com/Mind-thatsall/web-crawler-go/models"
 	"github.com/gin-gonic/gin"
 )
 
-func getManhwas(c *gin.Context) {
-	manhwas := getInfos()
-	c.IndentedJSON(http.StatusOK, manhwas)
-}
-
 func main() {
 	router := gin.Default()
-	router.GET("/api/manhwas", getManhwas)
+	models.ConnectToDB()
+
+	router.GET("/api/manhwas", controller.FindManhwas)
 
 	router.Run("localhost:9090")
 
