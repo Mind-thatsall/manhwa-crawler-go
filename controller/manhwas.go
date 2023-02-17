@@ -13,3 +13,13 @@ func FindManhwas(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": manhwas})
 }
+
+func FindManhwa(c *gin.Context) {
+	var manhwa models.ManhwaData
+	if err := models.DB.Where("slug = ?", c.Param("id")).First(&manhwa).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": manhwa})
+}

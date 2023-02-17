@@ -13,6 +13,7 @@ func main() {
 
 	/* routes */
 	r.GET("/manhwas", controller.FindManhwas)
+	r.GET("/manhwas/:id", controller.FindManhwa)
 
 	r.Run("localhost:9090")
 }

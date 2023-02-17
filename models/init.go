@@ -14,10 +14,17 @@ func ConnectDatabase() {
 		panic("Failed to connect to database!")
 	}
 
-	manhwas := getInfos()
+	db.Debug().AutoMigrate(&Manhwa{}, &ManhwaData{}, &Chapter{})
 
-	db.AutoMigrate(&Manhwa{})
+	manhwas := getManhwas()
+
 	db.Create(&manhwas)
+
+	for i := 0; i < len(manhwas); i++ {
+		manhwa, chapter := getManhwaData(manhwas[i].Slug)
+		db.Create(&manhwa)
+		db.Create(&chapter)
+	}
 
 	DB = db
 }
