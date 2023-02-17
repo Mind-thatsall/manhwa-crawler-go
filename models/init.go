@@ -1,25 +1,23 @@
 package models
 
 import (
-	"log"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
-func ConnectToDB() {
-	database, err := gorm.Open("sqlite3", "sqlite.db")
+func ConnectDatabase() {
+	db, err := gorm.Open(sqlite.Open("data.db"), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal(err)
+		panic("Failed to connect to database!")
 	}
 
-	manwhas := getInfos()
+	manhwas := getInfos()
 
-	database.AutoMigrate(&Manhwa{})
-	database.Create(&manwhas)
+	db.AutoMigrate(&Manhwa{})
+	db.Create(&manhwas)
 
-	DB = database
+	DB = db
 }

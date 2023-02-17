@@ -3,19 +3,14 @@ package models
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gocolly/colly"
 	"github.com/rs/xid"
 )
 
-type manhwa struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Picture string `json:"picture"`
-}
-
-func getInfos() []manhwa {
-	var manhwas = []manhwa{}
+func getInfos() []Manhwa {
+	var manhwas = []Manhwa{}
 
 	// Instantiate default collector
 	c := colly.NewCollector(
@@ -26,7 +21,9 @@ func getInfos() []manhwa {
 	c.OnHTML("div[class='uta']", func(e *colly.HTMLElement) {
 		id := xid.New()
 
-		manhwas = append(manhwas, manhwa{ID: id.String(), Name: e.ChildText("h4"), Picture: e.ChildAttr("img", "src")})
+		slug := strings.Join(strings.Split(strings.ToLower(e.ChildText("h4")), " "), "-")
+
+		manhwas = append(manhwas, Manhwa{ID: id.String(), Title: e.ChildText("h4"), Picture: e.ChildAttr("img", "src"), Slug: slug})
 	})
 
 	// Before making a request print "Visiting ..."

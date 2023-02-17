@@ -7,11 +7,12 @@ import (
 )
 
 func main() {
-	router := gin.Default()
-	models.ConnectToDB()
+	r := gin.Default()
 
-	router.GET("/api/manhwas", controller.FindManhwas)
+	models.ConnectDatabase()
 
-	router.Run("localhost:9090")
+	/* routes */
+	r.GET("/manhwas", controller.FindManhwas)
 
+	r.Run("localhost:9090")
 }
