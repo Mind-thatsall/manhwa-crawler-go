@@ -59,7 +59,9 @@ func GetManhwaData(s string) ManhwaData {
 	c.OnHTML("div[class='main-info']", func(e *colly.HTMLElement) {
 		id := xid.New()
 
-		manhwa = ManhwaData{ID: id.String(), Title: e.ChildText("div[id='titledesktop']"), Description: e.ChildText("div[itemprop='description']"), Slug: s}
+		chapters := GetAllChapters(s)
+
+		manhwa = ManhwaData{ID: id.String(), Title: e.ChildText("div[id='titledesktop']"), Description: e.ChildText("div[itemprop='description']"), Slug: s, Chapters: chapters}
 	})
 
 	// Before making a request print "Visiting ..."

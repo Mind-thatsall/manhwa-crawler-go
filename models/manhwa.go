@@ -11,10 +11,11 @@ type Manhwa struct {
 
 type ManhwaData struct {
 	gorm.Model
-	ID          string `json:"id" gorm:"primary_key"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Slug        string `json:"slug"`
+	ID          string    `json:"id" gorm:"primary_key"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Slug        string    `json:"slug"`
+	Chapters    []Chapter `json:"chapters"`
 }
 
 type ManhwaChapter struct {
