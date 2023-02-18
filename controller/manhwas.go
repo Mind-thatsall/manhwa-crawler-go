@@ -9,17 +9,14 @@ import (
 
 func FindManhwas(c *gin.Context) {
 	var manhwas []models.Manhwa
-	models.DB.Find(&manhwas)
+	manhwas = models.GetManhwas()
 
 	c.JSON(http.StatusOK, gin.H{"data": manhwas})
 }
 
 func FindManhwa(c *gin.Context) {
 	var manhwa models.ManhwaData
-	if err := models.DB.Where("slug = ?", c.Param("id")).First(&manhwa).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
-		return
-	}
+	manhwa = models.GetManhwaData(c.Param("id"))
 
 	c.JSON(http.StatusOK, gin.H{"data": manhwa})
 }

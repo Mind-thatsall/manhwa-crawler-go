@@ -9,7 +9,7 @@ import (
 	"github.com/rs/xid"
 )
 
-func getManhwas() []Manhwa {
+func GetManhwas() []Manhwa {
 	var manhwas = []Manhwa{}
 
 	// Instantiate default collector
@@ -48,9 +48,8 @@ func getManhwas() []Manhwa {
 	return manhwas
 }
 
-func getManhwaData(s string) (ManhwaData, []Chapter) {
+func GetManhwaData(s string) ManhwaData {
 	var manhwa = ManhwaData{}
-	var chapters = []Chapter{}
 
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0"),
@@ -59,9 +58,8 @@ func getManhwaData(s string) (ManhwaData, []Chapter) {
 	// On every a element which has href attribute call callback
 	c.OnHTML("div[class='main-info']", func(e *colly.HTMLElement) {
 		id := xid.New()
-		chapters = getAllChapters(s)
 
-		manhwa = ManhwaData{ID: id.String(), Title: e.ChildText("div[id='titledesktop']"), Chapters: chapters, Description: e.ChildText("div[itemprop='description']"), Slug: s}
+		manhwa = ManhwaData{ID: id.String(), Title: e.ChildText("div[id='titledesktop']"), Description: e.ChildText("div[itemprop='description']"), Slug: s}
 	})
 
 	// Before making a request print "Visiting ..."
@@ -83,10 +81,10 @@ func getManhwaData(s string) (ManhwaData, []Chapter) {
 
 	c.Visit("https://elarcpage.com/series/" + s)
 
-	return manhwa, chapters
+	return manhwa
 }
 
-func getAllChapters(s string) []Chapter {
+func GetAllChapters(s string) []Chapter {
 	var chapters = []Chapter{}
 
 	c := colly.NewCollector(
@@ -94,13 +92,19 @@ func getAllChapters(s string) []Chapter {
 	)
 
 	// On every a element which has href attribute call callback
-	c.OnHTML("div[class='main-info']", func(e *colly.HTMLElement) {
-		id := xid.New()
-		slug := s + "-chapter" + e.ChildAttr("li", "data-num")
-		chapter := Chapter{ID: id.String(), Number: e.ChildAttr("li", "data-num"), Date: e.ChildText("span[class='chapterdate']"), Slug: slug}
-		fmt.Println(chapter)
+	c.OnHTML("div[id='chapterlist']", func(e *colly.HTMLElement) {
+		var allDates = []string{}
 
-		chapters = append(chapters, chapter)
+		e.ForEach("span[class='chapterdate']", func(i int, h *colly.HTMLElement) {
+			allDates = append(allDates, h.Text)
+		})
+
+		for i := 0; i < len(e.ChildAttrs("li", "data-num")); i++ {
+			id := xid.New()
+			chapter := Chapter{ID: id.String(), Number: e.ChildAttrs("li", "data-num")[i], Date: allDates[i], Slug: s + "-chapter" + e.ChildAttrs("li", "data-num")[i]}
+			chapters = append(chapters, chapter)
+		}
+
 	})
 
 	// Before making a request print "Visiting ..."

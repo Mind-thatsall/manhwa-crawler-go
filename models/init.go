@@ -16,14 +16,18 @@ func ConnectDatabase() {
 
 	db.Debug().AutoMigrate(&Manhwa{}, &ManhwaData{}, &Chapter{})
 
-	manhwas := getManhwas()
+	manhwas := GetManhwas()
 
 	db.Create(&manhwas)
 
 	for i := 0; i < len(manhwas); i++ {
-		manhwa, chapter := getManhwaData(manhwas[i].Slug)
+		manhwa := GetManhwaData(manhwas[i].Slug)
 		db.Create(&manhwa)
-		db.Create(&chapter)
+
+		chaptersByManhwa := GetAllChapters(manhwas[i].Slug)
+		for i := 0; i < len(chaptersByManhwa); i++ {
+			db.Create(&chaptersByManhwa[i])
+		}
 	}
 
 	DB = db
