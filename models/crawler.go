@@ -131,16 +131,23 @@ func GetAllChapters(s string) []Chapter {
 	return chapters
 }
 
-func GetChapter(s string) {
+func GetChapter(s string) ChapterData {
+	var chapter ChapterData
 
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0"),
 	)
 
 	// On every a element which has href attribute call callback
-	c.OnHTML("div[id='readerarea']", func(e *colly.HTMLElement) {
-		fmt.Println(e.ChildText("img[class='alignnone']"))
+	c.OnHTML("div#readerarea", func(e *colly.HTMLElement) {
+		chapter = ChapterData{
+			ID:       xid.New().String(),
+			Pictures: e.ChildAttrs("img", "src"),
+		}
 
+		for i := 0; i < len(strings.Split(e.Text, ">")); i++ {
+			fmt.Println(strings.Split(e.Text, ">")[i])
+		}
 	})
 
 	// Before making a request print "Visiting ..."
@@ -161,4 +168,6 @@ func GetChapter(s string) {
 	})
 
 	c.Visit("https://elarcpage.com/" + s)
+
+	return chapter
 }
