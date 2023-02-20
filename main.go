@@ -1,15 +1,18 @@
 package main
 
-import "github.com/Mind-thatsall/web-crawler-go/models"
+import (
+	"github.com/Mind-thatsall/web-crawler-go/controller"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	// r := gin.Default()
+	r := gin.Default()
 
-	// r.GET("/api/manhwas", controller.FindManhwas)
-	// r.GET("/api/manhwa/:id", controller.FindManhwa)
-	// r.GET("/api/manhwa/series/:id")
+	r.GET("/api/manhwas", controller.FindManhwas)
+	r.GET("/api/manhwa/:id", controller.FindManhwa)
+	r.GET("/api/manhwa/series/:id", controller.FindChapter)
 
-	// r.Run("localhost:9090")
+	r.Run("localhost:9090")
 
-	models.GetChapter("starting-from-today-ill-work-as-a-city-lord-chapter-108")
+	// models.GetChapter("martial-peak-chapter-3072")
 }

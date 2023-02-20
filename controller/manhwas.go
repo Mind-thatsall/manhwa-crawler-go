@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Mind-thatsall/web-crawler-go/models"
@@ -19,4 +20,12 @@ func FindManhwa(c *gin.Context) {
 	manhwa = models.GetManhwaData(c.Param("id"))
 
 	c.JSON(http.StatusOK, gin.H{"data": manhwa})
+}
+
+func FindChapter(c *gin.Context) {
+	var chapter models.ChapterData
+	chapter = models.GetChapter(c.Param("id"))
+	fmt.Println(chapter)
+
+	c.JSON(http.StatusOK, gin.H{"data": chapter})
 }
