@@ -9,7 +9,7 @@ import (
 	"github.com/rs/xid"
 )
 
-func GetManhwas() []Manhwa {
+func GetManhwas(p string) []Manhwa {
 	var manhwas = []Manhwa{}
 
 	// Instantiate default collector
@@ -24,6 +24,8 @@ func GetManhwas() []Manhwa {
 		slug := strings.Join(strings.Split(strings.ToLower(e.ChildText("h4")), " "), "-")
 
 		manhwas = append(manhwas, Manhwa{ID: id.String(), Title: e.ChildText("h4"), Picture: e.ChildAttr("img", "src"), Slug: slug})
+
+		fmt.Println(manhwas)
 	})
 
 	// Before making a request print "Visiting ..."
@@ -43,7 +45,7 @@ func GetManhwas() []Manhwa {
 		fmt.Println("Finished !")
 	})
 
-	c.Visit("https://elarcpage.com/")
+	c.Visit("https://elarcpage.com/page/" + p)
 
 	return manhwas
 }

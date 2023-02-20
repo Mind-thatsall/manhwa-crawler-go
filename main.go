@@ -8,11 +8,11 @@ import (
 func main() {
 	r := gin.Default()
 
-	r.GET("/api/manhwas", controller.FindManhwas)
+	r.GET("/api/manhwas/:page", controller.FindManhwas)
 	r.GET("/api/manhwa/:id", controller.FindManhwa)
 	r.GET("/api/manhwa/series/:id", controller.FindChapter)
 
 	r.Run("localhost:9090")
 
-	// models.GetChapter("martial-peak-chapter-3072")
+	// models.GetManhwas()
 }
