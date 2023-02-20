@@ -134,7 +134,8 @@ func GetAllChapters(s string) []Chapter {
 func GetChapter(s string) ChapterData {
 	var chapter ChapterData
 	var chapterPicture []string
-	var tag string
+	var tags []string
+	var splittedTag []string
 
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0"),
@@ -142,22 +143,28 @@ func GetChapter(s string) ChapterData {
 
 	// On every a element which has href attribute call callback
 	c.OnHTML("div#readerarea", func(e *colly.HTMLElement) {
-
+		// GET ALL TAGS
 		for i := 0; i < len(strings.Split(e.Text, ">")); i++ {
-			tag = strings.Split(e.Text, ">")[i]
-			for i := 0; i < len(strings.Split(tag, `"`)); i++ {
-				if len(strings.Split(tag, `"`)) > 1 {
-					chapterPicture = append(chapterPicture, strings.Split(tag, `"`)[5])
+			tags = append(tags, strings.Split(e.Text, ">")[i])
+			//fmt.Println(tags)
+		}
 
-					chapter = ChapterData{
-						ID:       xid.New().String(),
-						Pictures: chapterPicture,
+		// SPLIT ALL TAGS
+		for i := 0; i < len(tags); i++ {
+			if len(tags[i]) > 3 {
+				splittedTag = strings.Split(tags[i], `"`)
+				for i := 0; i < len(splittedTag); i++ {
+					if strings.Contains(splittedTag[i], "https") {
+						chapterPicture = append(chapterPicture, splittedTag[i])
 					}
 				}
 			}
 		}
 
-		fmt.Println(chapter)
+		chapter = ChapterData{
+			ID:       xid.New().String(),
+			Pictures: chapterPicture,
+		}
 
 	})
 
