@@ -24,3 +24,8 @@ type Chapter struct {
 	Date   string `json:"date"`
 	Slug   string `json:"slug"`
 }
+
+type ChapterData struct {
+	ID       string   `json:"id"`
+	Pictures []string `json:"pictures"`
+}
