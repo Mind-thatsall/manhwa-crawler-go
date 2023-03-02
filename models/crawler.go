@@ -25,7 +25,6 @@ func GetManhwas(p string) []Manhwa {
 
 		manhwas = append(manhwas, Manhwa{ID: id.String(), Title: e.ChildText("h4"), Picture: e.ChildAttr("img", "src"), Slug: slug})
 
-		fmt.Println(manhwas)
 	})
 
 	// Before making a request print "Visiting ..."

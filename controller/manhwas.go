@@ -12,7 +12,7 @@ func FindManhwas(c *gin.Context) {
 	var manhwas []models.Manhwa
 	manhwas = models.GetManhwas(c.Param("page"))
 
-	c.JSON(http.StatusOK, gin.H{"data": manhwas})
+	c.JSON(http.StatusOK, manhwas)
 }
 
 func FindManhwa(c *gin.Context) {
